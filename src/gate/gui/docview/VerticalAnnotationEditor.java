@@ -54,6 +54,7 @@ import gate.event.CreoleListener;
 import gate.event.DocumentEvent;
 import gate.event.DocumentListener;
 import gate.gui.AnnotationFilterPanel;
+import gate.swing.XJTable;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -113,7 +114,7 @@ import ca.odell.glazedlists.swing.DefaultEventTableModel;
 public class VerticalAnnotationEditor extends AbstractDocumentView { 
  
     protected JSplitPane mainPanel;
-    protected JTable table;
+    protected XJTable table;
     protected JScrollPane scroller;
     
     protected TextualDocumentView textView;
@@ -521,9 +522,19 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 		
 	// setup the table
 	
-	table = new JTable(tableModel);
+	table = new XJTable(tableModel);
 	table.setIntercellSpacing(new Dimension(2, 0));
 	table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+	// setup XJTable
+	table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+	table.setEnableHidingColumns(true);
+	table.setTabSkipUneditableCell(true);
+	table.setEditCellAsSoonAsFocus(true);
+	// TODO: make sortable
+	// - default: unsorted (text-order)
+	// - if sorted: show which column is used for sorting
+	table.setSortable(false);
 
 	// update the caret position to follow the selection
 	table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
