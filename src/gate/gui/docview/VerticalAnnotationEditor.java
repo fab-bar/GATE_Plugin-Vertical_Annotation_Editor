@@ -532,10 +532,10 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	table.setEnableHidingColumns(true);
 	table.setTabSkipUneditableCell(true);
 	table.setEditCellAsSoonAsFocus(true);
-	// TODO: make sortable
-	// - default: unsorted (text-order)
-	// - if sorted: show which column is used for sorting
-	table.setSortable(false);
+	// TODO: 
+	// show which column is used for sorting
+	table.setSortable(true);
+	table.setSortedColumn(0);
 
 	// update the caret position to follow the selection
 	table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
