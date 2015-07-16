@@ -293,6 +293,7 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	    // enumerations get specific cell editors (combobox with autocompletion)
 	    // and a specific rendered (renders all values not in the list red)
 	    FeatureSchema[] schemas = schema.getFeatureSchemaSet().toArray(new FeatureSchema[0]);
+	    int column_offset = tableModel.getTableFormat().getColumnCount() - schemas.length;
 	    for(int i = 0; i < schemas.length; i++) {
 		FeatureSchema fs = schemas[i];
 		if (fs.isEnumeration()) {
@@ -311,7 +312,7 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 		    if (fs.isOptional()) {
 			ac.setFirstItem("");		    	    		
 		    }
-		    TableColumn cm = table.getColumnModel().getColumn(i+1);
+		    TableColumn cm = table.getColumnModel().getColumn(i+column_offset);
 		    cm.setCellEditor(columnEditor);		    	    	
 					
 		    // adding empty String, if feature is optional
@@ -634,7 +635,7 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	}
 
 	@Override
-	    public Object getColumnValue(Annotation aData, int column) {
+	public Object getColumnValue(Annotation aData, int column) {
 	    switch(column){
 	    case START_COL: return aData.getStartNode().getOffset();
 	    case END_COL: return aData.getEndNode().getOffset();
@@ -682,22 +683,28 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	}
  	     
 	public int getColumnCount(){
-	    return schema.length+1;
+	    return schema.length+2;
 	}
 		
 	public String getColumnName(int column){
 	    if (column == 0) {
+		return "Offset";
+	    }
+	    else if (column == 1) {
 		return "Text";
 	    }
 	    else {
-		return schema[column-1].getFeatureName();
+		return schema[column-2].getFeatureName();
 	    }
 	}
 		
 	@Override
-	    public Object getColumnValue(Annotation aData, int column) {
+	public Object getColumnValue(Annotation aData, int column) {
 	    if(column >= getColumnCount()) return null;
 	    if (column == 0) {
+		return aData.getStartNode().getOffset();
+	    }
+	    else if (column == 1) {
 		return gate.Utils.stringFor(textView.getDocument(), aData);
 	    }
 	    else {
@@ -706,8 +713,8 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	}
  				
 	public boolean isEditable(Annotation annot, int columnIndex){
-	    // only first column is not editable
-	    return columnIndex != 0;
+	    // only first two column are not editable
+	    return columnIndex > 1;
 	}
    	         
 	public Annotation setColumnValue(Annotation baseObject, Object editedValue, int column) {
@@ -718,18 +725,21 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	}
 
 	@Override
-	    public Class<?> getColumnClass(int column) {
+	public Class<?> getColumnClass(int column) {
 	    if (column == 0) {
+		return Long.class;
+	    }
+	    else if (column == 1) {
 		return String.class;
 	    }
 	    else {
-		FeatureSchema fs = schema[column-1];
+		FeatureSchema fs = schema[column-2];
 		return fs.getFeatureValueClass();
 	    }
 	}
 
 	@Override
-	    public Comparator<?> getColumnComparator(int column) {
+	public Comparator<?> getColumnComparator(int column) {
 	    return null;
 	}
     }
