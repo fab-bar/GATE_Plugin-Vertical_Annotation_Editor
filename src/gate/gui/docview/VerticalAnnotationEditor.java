@@ -330,11 +330,13 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 		    cm.setCellRenderer(checkableCellRenderer);
 		}
 	    }
-	    
+	    table.setTabSkipUneditableCell(true);
 	}
 	else {
 	    // generic table format for annotations
 	    tableModel.setTableFormat(new AnnotationTableFormat());
+
+	    table.setTabSkipUneditableCell(false);
 	}
 
     }
@@ -530,7 +532,7 @@ public class VerticalAnnotationEditor extends AbstractDocumentView {
 	// setup XJTable
 	table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 	table.setEnableHidingColumns(true);
-	table.setTabSkipUneditableCell(true);
+	table.setTabSkipUneditableCell(false);
 	table.setEditCellAsSoonAsFocus(true);
 	// TODO: 
 	// show which column is used for sorting
